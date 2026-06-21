@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="dashboard-header">
+    <h1>Task Dashboard</h1>
+    <a href="{{ url_for('add_task') }}" class="add-btn">+ Add Task</a>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <h3>Total Tasks</h3>
+        <p>{{ total_tasks }}</p>
+    </div>
+    <div class="stat-card">
+        <h3>Completed</h3>
+        <p>{{ completed_tasks }}</p>
+    </div>
+    <div class="stat-card">
+        <h3>Pending</h3>
+        <p>{{ pending_tasks }}</p>
+    </div>
+    <div class="stat-card">
+        <h3>High Priority</h3>
+        <p>{{ high_priority }}</p>
+    </div>
+</div>
+
+<div class="task-table-card">
+    <h2>Your Tasks</h2>
+
+    {% if tasks %}
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Priority</th>
+                <th>Due Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td>{{ task.title }}</td>
+                <td>{{ task.description }}</td>
+                <td>
+                    <span class="priority {{ task.priority|lower }}">
+                        {{ task.priority }}
+                    </span>
+                </td>
+                <td>{{ task.due_date }}</td>
+                <td>
+                    <span class="status {{ task.status|lower }}">
+                        {{ task.status }}
+                    </span>
+                </td>
+                <td class="action-buttons">
+                    <a href="{{ url_for('toggle_status', task_id=task.id) }}" class="complete-btn">Toggle</a>
+                    <a href="{{ url_for('edit_task', task_id=task.id) }}" class="edit-btn">Edit</a>
+                    <a href="{{ url_for('delete_task', task_id=task.id) }}" class="delete-btn" onclick="return confirm('Delete this task?')">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p class="empty-msg">No tasks yet. Click <b>Add Task</b> to create one.</p>
+    {% endif %}
+</div>
+
+{% endblock %}
